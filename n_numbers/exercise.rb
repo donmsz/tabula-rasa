@@ -118,10 +118,7 @@ def pascals_triangle(num)
     a = Array.new (num) {Array.new}
     a[0] << 1
     (1..num).each do |i|
-        byebug
-        i.times do |j|
-            a[i] << a[i-1][j] + ((a[i-1][j-1]) || 0)
-        end
+        
     end
 
     #a[i] << a[i-1][i-1] + ((a[i-2][i-1]) || 0) 
@@ -130,7 +127,7 @@ def pascals_triangle(num)
 end
 
 
-p pascals_triangle(5)
+#p pascals_triangle(5)
 # [
 #     [1],
 #     [1, 1],
@@ -138,3 +135,62 @@ p pascals_triangle(5)
 #     [1, 3, 3, 1],
 #     [1, 4, 6, 4, 1]
 # ]
+def is_prime?(num)
+    return false if num < 2
+    (2...num).each do |i|
+        return false if num % i == 0
+    end
+    true
+end
+
+def mersenne_prime(num)
+    arr = []
+    i = 1
+    while arr.length < num
+        if is_prime?(2 ** i - 1)
+            arr << 2 ** i - 1
+        end
+        i += 1
+    end
+    arr[num - 1]
+end
+
+def triangular_word?(string)
+    alph = "abcdefghijklmnopqrstuvwxyz"    
+    num = 0
+    string.each_char do |char|
+        num += alph.index(char) + 1
+    end
+    (1..num).each do |i|
+        return true if num == (i * (i + 1)) / 2
+    end
+    false
+end
+
+def consecutive_collapse(array)
+    iksde = true
+    i = 0
+    while iksde 
+        #byebug
+        if (array[i] - array[i+1] == 1) || (array[i] - array[i+1] == -1)
+            array = array[0...i] + array[i+2..-1]
+            i = 0
+        end
+
+        if i == array.length || array.length <= 2
+            iksde = false
+        end
+        i += 1
+    end
+    array
+end
+
+
+#p consecutive_collapse([3, 4, 1])                     # [1]
+#p consecutive_collapse([1, 4, 3, 7])                  # [1, 7]
+#p consecutive_collapse([9, 8, 2])                     # [2]
+#p consecutive_collapse([9, 8, 4, 5, 6])               # [6]
+ p consecutive_collapse([1, 9, 8, 6, 4, 5, 7, 9, 2])   # [1, 9, 2]
+# p consecutive_collapse([3, 5, 6, 2, 1])               # [1]
+# p consecutive_collapse([5, 7, 9, 9])                  # [5, 7, 9, 9]
+# p consecutive_collapse([13, 11, 12, 12])              # []

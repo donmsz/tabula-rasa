@@ -151,9 +151,20 @@ def procipher(sent,hasz)
     sentence.join(" ")
 end
 
-def picky_procipher()
-
-
+def picky_procipher(sent,hasz)
+    sentence = []
+    sent.split(" ").each do |word|
+        #byebug
+        placeholder = word
+        hasz.each_key do |key|
+            if key.call(word)
+                placeholder = hasz[key].call(placeholder)
+                break
+            end
+        end
+        sentence << placeholder
+    end
+    sentence.join(" ")
 end
 
 

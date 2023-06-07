@@ -1,38 +1,40 @@
 class Flight
 
+    attr_reader :passengers
+
     def initialize(flight_number, capacity)
         @flight_number = flight_number
         @capacity = capacity
         @passengers = []
     end
 
-    def passengers
-        @passengers
-    end
-
     def full?
-        @capacity <= @passengers.length
+        return true if @passengers.length >= @capacity
+        false
     end
 
     def board_passenger(passenger)
-        if passenger.has_flight?(@flight_number) && !self.full?
+        if !full? && passenger.has_flight?(@flight_number)
             @passengers << passenger
         end
     end
 
     def list_passengers
-        names = []
+        passanger_names = []
         @passengers.each do |ele|
-            names << ele.name
+            passanger_names << ele.name
         end
-        names
+        passanger_names
     end
 
-    def [](index)
+    def [](index) 
         @passengers[index]
     end
 
-    def <<(passenger)
-        self.board_passenger(passenger)
+    def <<(passanger)
+        board_passenger(passanger)
+
     end
+
+
 end

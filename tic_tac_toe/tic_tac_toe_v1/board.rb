@@ -1,84 +1,66 @@
 class Board
 
+
     def initialize
-        @grid = Array.new(3) {Array.new(3, "_")}
+        @grid = Array.new (3) {Array.new(3, "_")}
+
     end
-    #attr_reader :grid
 
     def valid?(position)
-        return false if position[0] < 0 || position[0] > @grid.length - 1
-        return false if position[1] < 0 || position[1] > @grid[0].length - 1
+        return false if (position[0] < 0) || (position[0] > @grid.length - 1)
+        return false if (position[1] < 0) || (position[1] > @grid.length - 1) 
         true
     end
 
     def empty?(position)
-        return true if @grid[position[0]][position[1]] == "_"
+        if valid?(position)
+            return true if @grid[position[0]][position[1]] == "_"
+        end
         false
     end
 
     def place_mark(position, mark)
-        if !valid?(position) || !empty?(position)
-            raise "There is something wrong"
+        if valid?(position) && empty?(position)
+            @grid[position[0]][position[1]] = mark
+        else
+            raise "Invalid position or mark"
         end
-        @grid[position[0]][position[1]] = mark
     end
 
     def print
+        p "---------------"
         @grid.each do |row|
             p row
         end
+        p "---------------"
+        true
     end
 
     def win_row?(mark)
         @grid.each do |row|
-            return row.all?{|i| i == mark}
+            return true if row.all? {|check| check == mark}
         end
+        false
     end
 
     def win_col?(mark)
-        @grid.transpose.each do |col|
-            return col.all?{|i| i == mark}
+        @grid.transpose.each do |row|
+            return true if row.all? {|check| check == mark}
         end
-    end
-
-    def first_diagonal(mark)
-        i = 0
-        while i < @grid.length
-            if @grid[i][i] != mark
-                return false
-            end
-            i += 1
-        end
-        true   
-    end
-
-    def second_diagonal(mark)
-        i = 0
-        while i < @grid.length
-            if @grid[i][-i - 1] != mark
-                return false
-            end
-            i += 1
-        end
-        true 
+        false
     end
 
     def win_diagonal?(mark)
-        if first_diagonal(mark) || second_diagonal(mark)
-            return true
-        end
-        false
+        return (0...@grid.length).collect {|i| @grid[i][i]}.all? {|check| check == mark} || 
+        (0...@grid.length).collect {|i| @grid[i][-i - 1]}.all? {|check| check == mark}
     end
-
+    
     def win?(mark)
-        if win_row?(mark) || win_col?(mark) || win_diagonal?(mark)
-            return true
-        end
-        false
+        return win_row?(mark) || win_col?(mark) || win_diagonal?(mark)
     end
 
     def empty_positions?
-        @grid.flatten.include?("_")
+        @grid.flatten.any? {|check| check == "_"}
     end
 
 

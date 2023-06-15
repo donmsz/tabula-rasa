@@ -1,120 +1,119 @@
 require "byebug"
 def zip(*arrays)
-    
-    arr = Array.new(3) {Array.new}
-    arrays.each do |array|
-        array.each_with_index do |ele,idx|
-        arr[idx] << ele 
-        end
-    end
-    arr
+
+    arrays.transpose
+
 end
 
+
 def prizz_proc(array, prc, block)
-    new_arr = []
-    array.each do |i|
-        if prc.call(i) && !block.call(i) || !prc.call(i) && block.call(i)
-            new_arr << i 
+    result = []
+    array.each do |ele|
+        if (!prc.call(ele) && block.call(ele)) || (prc.call(ele) && !block.call(ele))
+            result << ele
         end
     end
-    new_arr
+    result
 end
 
 def zany_zip(*arrays)
-    max = arrays.max {|a,b| a.length <=> b.length}
-    result = Array.new(max.length) {Array.new(arrays.length)}
-    arrays.each_with_index do |array, index|
-        array.each_with_index do |ele, idx|
-            result[idx][index] = ele
+    long = (arrays.max {|a, b| a.length <=> b.length}).length
+    len = arrays.length
+    aa = Array.new(long) {Array.new(len)}
+
+    arrays.each_with_index do |arr, arr_index|
+        arr.each_with_index do |ele, ele_idx|       
+            aa[ele_idx][arr_index] = ele
         end
     end
-
-    result
+    aa
 end
 
 def maximum(array, &prc)
     return nil if array.empty?
-
-    max = prc.call(array[0])
-    result = array[0]
-
+    maxik = array[0]
     array.each do |ele|
-        if prc.call(ele) >= max
-            max = prc.call(ele)
-            result = ele
+        if prc.call(ele) >= prc.call(maxik) 
+            maxik = ele
         end
     end
-    result
+    maxik
 end
 
 def my_group_by(array, &prc)
-    h = Hash.new {|hash, key| hash[key]=[]}
+
+    h = Hash.new {|hash,key| hash[key] = []}
     array.each do |ele|
         h[prc.call(ele)] << ele
     end
-    h
+h
 end
+
 
 def max_tie_breaker(array, prc, &block)
     return nil if array.empty?
-    
-    max = block.call(array[0])
-    result = array[0]
+    maxik = array[0]
     array.each do |ele|
-        if prc.call(ele) == max
-            max = prc.call(ele)
-            result = ele
-        elsif block.call(ele) > max
-            max = block.call(ele)
-            result = ele
+        if block.call(ele) > block.call(maxik)
+            maxik = ele
+        elsif block.call(ele) == block.call(maxik)
+            if prc.call(ele) > prc.call(maxik)
+                maxik = ele
+            end
+        else
+            maxik
         end
     end
-    result
+    maxik
 end
 
 def vowel_count(word)
-    count = 0
-    vowel = "aeiou"
-    word.each_char do |i|
-        if vowel.include?(i)
-            count +=1
+    vowels = "aeiou"
+    counter = 0
+
+    word.split("").each do |char|
+        if vowels.include?(char)
+            counter += 1
         end
     end
-    count
+
+    counter
+end
+
+def first_vowel(word)
+    vowels = "aeiou"
+    word.split("").each_with_index do |char,idx|
+        return idx if vowels.include?(char)
+    end
+
 end
 
 
-def f(word)
-    vowel = "aeiou"
-    result = 0
-    word.each_char.with_index do |c,i|
-        if vowel.include?(c)
-            return i
+def last_vowel(word)
+    vowels = "aeiou"
+    last = 0
+    word.split("").each_with_index do |char,idx|
+        if vowels.include?(char)
+            last = idx
         end
     end
+    last
 end
 
-def l(word)
-    vowel = "aeiou"
-    result = 0
-    word.each_char.with_index do |c,i|
-        if vowel.include?(c)
-            result = i
-        end
-    end
-    result
-end
 
 def silly_syllables(sentence)
     result = []
+    vowels = "aeiou"
     sentence.split(" ").each do |word|
-        if vowel_count(word) < 2
+        if vowel_count(word) < 2 
             result << word
         else
-            el = word.split("")
-            result << el[f(word)..l(word)].join()
+            first = first_vowel(word)
+            last = last_vowel(word)
+
+            result << word[first..last]
+
         end
     end
-
     result.join(" ")
 end

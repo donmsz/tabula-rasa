@@ -1,14 +1,17 @@
 class Board
 
-
     def initialize
-        @grid = Array.new (3) {Array.new(3, "_")}
+        @grid = Array.new(3) {Array.new(3,"_")}
+    end
 
+    def grid
+        @grid
     end
 
     def valid?(position)
-        return false if (position[0] < 0) || (position[0] > @grid.length - 1)
-        return false if (position[1] < 0) || (position[1] > @grid.length - 1) 
+        if (position[0] < 0) || (position[0] > @grid.length - 1) || (position[1] < 0) || (position[1] > @grid.length - 1)
+            return false
+        end
         true
     end
 
@@ -23,45 +26,56 @@ class Board
         if valid?(position) && empty?(position)
             @grid[position[0]][position[1]] = mark
         else
-            raise "Invalid position or mark"
+            raise "co Ty robisz?"
         end
     end
 
     def print
-        p "---------------"
         @grid.each do |row|
             p row
+            p "_____________"
         end
-        p "---------------"
-        true
     end
 
     def win_row?(mark)
         @grid.each do |row|
-            return true if row.all? {|check| check == mark}
+            return true if row.all?{|ele| ele == mark}
         end
         false
     end
 
     def win_col?(mark)
-        @grid.transpose.each do |row|
-            return true if row.all? {|check| check == mark}
+        @grid.transpose.each do |col|
+            return true if col.all?{|ele| ele == mark}
         end
         false
     end
 
     def win_diagonal?(mark)
-        return (0...@grid.length).collect {|i| @grid[i][i]}.all? {|check| check == mark} || 
-        (0...@grid.length).collect {|i| @grid[i][-i - 1]}.all? {|check| check == mark}
+        left = true
+        right = true
+        (0...@grid.length).each do |i|
+            if @grid[i][i] != mark
+                left = false
+            end
+            if @grid[i][-i - 1] != mark
+                right = false
+            end
+        end
+        left || right
     end
-    
+
     def win?(mark)
         return win_row?(mark) || win_col?(mark) || win_diagonal?(mark)
     end
 
     def empty_positions?
-        @grid.flatten.any? {|check| check == "_"}
+        @grid.each do |row|
+            row.each do |position|
+                return true if position == "_"
+            end
+        end
+        false
     end
-
 
 end

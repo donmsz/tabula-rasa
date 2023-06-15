@@ -1,241 +1,268 @@
 require "byebug"
-## JEDYNCZEKA 
 
 def strange_sums(array)
-    count = 0
-    array.each do |ele|
-        if array.include?(-ele)
-            count += 1
+    result = 0
+    (0...array.length-1).each do |i|
+        (i+1..array.length-1).each do |j|
+            if array[i] + array[j] == 0
+                result += 1
+            end
         end
     end
-    count / 2
+    result
 end
 
-def pair_product(array, prod)
-    i = 0
-    byebug
-    (i...array.length - 1).each do |ele|
-        (i + 1...array.length).each do |e|
-            return true if array[ele] * array[e] == prod
+def pair_product(array, num)
+    (0...array.length-1).each do |i|
+        (i+1..array.length-1).each do |j|
+            return true if array[i] * array[j] == num
         end
-        i += 1
     end
     false
 end
 
-def rampant_repeats(string,hash)
-    result = []
-    string.split("").each do |char|
-       if hash.key?(char)
-        result << char * hash[char]
-       else
-        result << char 
-       end
-    end
-    result.join("")
+def rampant_repeats(string, hash)
+
+    string.chars.map do |char|
+        if hash.has_key?(char)
+            char = char * hash[char]
+        else
+            char
+        end
+    end.join
 end
 
 def perfect_square(num)
     (1..num).each do |i|
-        return true if i * i == num
-    end
-    false    
-end
-##DWOJECZKA
-
-def div(num)
-    count = 0
-
-    (1..num).each do |i|
-        if num % i == 0 
-            count += 1
+        if i * i == num
+            return true
         end
     end
-    count
+    false
+end
+
+
+def divis(num)
+    divisors = []
+    (1..num).each do |i|
+        if num % i == 0
+            divisors << i
+        end
+    end
+    divisors.length
 end
 
 def anti_prime?(num)
     (1...num).each do |i|
-        return false if div(i) > div(num)
+        if divis(num) < divis(i)
+            return false
+        end
     end
     true
 end
 
 def matrix_addition(mtx_a, mtx_b)
-    a = Array.new(mtx_a.length) {Array.new(mtx_a[0].length,0)}
-    (0...mtx_a.length).each do |i|
-        (0...mtx_a[0].length).each do |j|
-            a[i][j] = mtx_a[i][j]+mtx_b[i][j]
+
+    result = []
+    mtx_a.each_with_index do |array,index|
+        result_row = []
+        array.each_with_index do |element, idx|
+            result_row << element + mtx_b[index][idx]
         end
+        result << result_row
     end
-    a
+
+    result
 end
 
-def mutual_factors(*number)
-    result =[]
-    (1..number.max).each do |i|
-        if number.all? {|num| num % i == 0}
-            result << i
-        end
+def mutual_factors(*nums)
+    result = []
+    (1..nums.max).each do |i|
+        result << i if nums.all?{ |num| num % i == 0}
     end
     result
 end
 
-def tribonacci_number(num)
-    return 1 if num == 1 || num == 2
-    return 2 if num == 3
-    tribonacci_number(num-1) + tribonacci_number(num-2) + tribonacci_number(num-3)
+def tribonacci_number(number)
+    return 1 if number == 1
+    return 1 if number == 2
+    return 2 if number == 3    
+    return tribonacci_number(number-1) + tribonacci_number(number-2) + tribonacci_number(number-3)
 end
-# TROJECZKA
-def matrix_addition_reloaded(*matrices)
-    return nil if matrices.any?{|i| i.length != matrices[0].length }
-    a = Array.new(matrices[0].length) {Array.new(2,0)}
-        matrices.each_with_index do |array|
-            array.each_with_index do |ele,index|
-                ele.each_with_index do |i,idx|
-                    a[index][idx] += i
+
+def matrix_addition_reloaded(*mtx)
+    result = []
+    return mtx if mtx.length == 1
+    return matrix_addition(mtx[0],mtx[1]) if mtx.length == 2
+    if mtx.all? {|arr| arr.length == mtx[0].length} 
+        mtx[0].each_with_index do |array,row_index|
+            result_row = []
+            array.each_with_index do |elem, col_index|
+                sum = elem
+                (1...mtx.length).each do |m|
+                    sum += mtx[m][row_index][col_index]
                 end
+                result_row << sum
             end
+            result << result_row
         end
-    a
+    else
+        return nil
+    end
+    result
 end
 
 def squarocol?(array)
-    array.any?{|arr| arr.all?{|i| i == arr[0]} } || array.transpose.any?{|arr| arr.all?{|i| i == arr[0]} }
-end
-
-def squaragonal?(array) 
-    first = []
-    second = []
-    (0...array.length).each do |i|
-            first << array[i][i]
-            second << array[i][-i-1]
+    array.each do |row|
+        return true if row.all? {|i| row[0] == i }
     end
-    first.uniq.count <= 1 || second.uniq.count <= 1
-end
-
-def pascals_triangle(num)
-    a = Array.new (num) {Array.new}
-    a[0] << 1
-    (1..num).each do |i|
-        
-    end
-
-    #a[i] << a[i-1][i-1] + ((a[i-2][i-1]) || 0) 
-    a
-
-end
-
-
-#p pascals_triangle(5)
-# [
-#     [1],
-#     [1, 1],
-#     [1, 2, 1],
-#     [1, 3, 3, 1],
-#     [1, 4, 6, 4, 1]
-# ]
-def is_prime?(num)
-    return false if num < 2
-    (2...num).each do |i|
-        return false if num % i == 0
-    end
-    true
-end
-
-def mersenne_prime(num)
-    arr = []
-    i = 1
-    while arr.length < num
-        if is_prime?(2 ** i - 1)
-            arr << 2 ** i - 1
-        end
-        i += 1
-    end
-    arr[num - 1]
-end
-
-def triangular_word?(string)
-    alph = "abcdefghijklmnopqrstuvwxyz"    
-    num = 0
-    string.each_char do |char|
-        num += alph.index(char) + 1
-    end
-    (1..num).each do |i|
-        return true if num == (i * (i + 1)) / 2
+    array.transpose.each do |row|
+        return true if row.all? {|i| row[0] == i }
     end
     false
 end
 
+def squaragonal?(array)
+    left = true
+    right = true
+    (0...array.length - 1).each do |i|
+        if array[i][i] != array[i+1][i+1]
+            left = false
+        end
+        if array[i][-i - 1] != array[i+1][-i - 2]
+            right = false
+        end
+    end
+    left || right
+end
+
+def pascals_triangle(num_rows)
+triangle = []
+
+num_rows.times do |row|
+  current_row = []
+  
+  row.times do |col|
+    if col.zero? || col == row - 1
+      current_row << 1
+    else
+      current_row << triangle[row - 1][col - 1] + triangle[row - 1][col]
+    end
+  end
+  
+  triangle << current_row
+end
+
+triangle
+end
+
+
+def prime?(num)
+    return false if num < 2
+
+    (2...num).each do |i|
+        if num % i == 0
+            return false
+        end
+    end
+    true
+
+end
+
+
+
+def mersenne_prime(num)
+    primes = []
+    i = 2
+    while primes.length < num
+        primes << i - 1 if prime?(i - 1)
+
+        i *= 2
+    end
+
+    primes[num-1]
+end
+
+def triangular_word?(word)
+
+    alp = "_abcdefghijklmnopqrstuvwxyz"
+    check = 0
+    
+    word.chars do |char|
+        check += alp.index(char)
+    end
+    i = 1
+    while true
+        if ((i * (i + 1)) / 2) == check
+            return true
+        elsif ((i * (i + 1)) / 2) > check
+            return false
+        end
+        i += 1
+    end
+end
+
+
 def consecutive_collapse(array)
-    iksde = true
     i = 0
-    while iksde 
-        #byebug
-        if (array[i] - array[i+1] == 1) || (array[i] - array[i+1] == -1)
-            array = array[0...i] + array[i+2..-1]
+    while true
+        return array if array.length < 2
+        return array if i >= array.length - 1 
+        if array[i] - array[i+1] == 1 || array[i] - array[i+1] == -1
+            array.delete_at(i+1)
+            array.delete_at(i)
             i = 0
+        elsif array.length == 2 
+            if array[0] != array[1]
+                return array
+            end
         else
             i += 1
-        end
-
-        if i == array.length - 1 || array.length < 2
-            iksde = false
         end
     end
     array
 end
-def greater(elem,nextt)
-    count = 0
-    i = 1
-    result = 0
-    while count < nextt
-        if is_prime?(elem + i)
-            result = elem + i
-            count += 1
+
+def pretentious_primes(array,number)
+    result = []
+
+    
+    array.each do |num|
+        primes = []
+        if number > 0 
+            #debugger
+            i = num + 1
+            while primes.length < number
+                if prime?(i)
+                    primes << i
+                end
+                i += 1
+            end
+        else number < 0 
+            i = num - 1
+            while primes.length < -number
+                primes << nil if i < 2
+                if prime?(i)
+                    primes << i
+                end
+                i -= 1
+            end
         end
-        i += 1
+        result << primes[-1]
     end
+
+
     result
 end
 
-def lesser(elem,nextt)
-    #byebug
-    count = 0
-    i = 1
-    result = 0
-    while count > nextt
-        if is_prime?(elem - i)
-            result = elem - i
-            count -= 1
-        elsif elem - i < 2
-            return nil
-        end
-        i += 1
-    end
-    result
-end
 
-def pretentious_primes(array, num)
-    arr = []
-    array.each do |ele|
-        if num > 0
-            arr << greater(ele,num)
-        elsif num < 0
-            arr << lesser(ele,num)
-        end
-    end
-    arr
-end
-
-
- p pretentious_primes([4, 15, 7], 1)           # [5, 17, 11]
- p pretentious_primes([4, 15, 7], 2)           # [7, 19, 13]
- p pretentious_primes([12, 11, 14, 15, 7], 1)  # [13, 13, 17, 17, 11]
+p pretentious_primes([4, 15, 7], 1)           # [5, 17, 11]
+p pretentious_primes([4, 15, 7], 2)           # [7, 19, 13]
+p pretentious_primes([12, 11, 14, 15, 7], 1)  # [13, 13, 17, 17, 11]
 p pretentious_primes([12, 11, 14, 15, 7], 3)  # [19, 19, 23, 23, 17]
- p pretentious_primes([4, 15, 7], -1)          # [3, 13, 5]
- p pretentious_primes([4, 15, 7], -2)          # [2, 11, 3]
- p pretentious_primes([2, 11, 21], -1)         # [nil, 7, 19]
- p pretentious_primes([32, 5, 11], -3)         # [23, nil, 3]
- p pretentious_primes([32, 5, 11], -4)         # [19, nil, 2]
- p pretentious_primes([32, 5, 11], -5)         # [17, nil, nil]
+p pretentious_primes([4, 15, 7], -1)          # [3, 13, 5]
+p pretentious_primes([4, 15, 7], -2)          # [2, 11, 3]
+p pretentious_primes([2, 11, 21], -1)         # [nil, 7, 19]
+p pretentious_primes([32, 5, 11], -3)         # [23, nil, 3]
+p pretentious_primes([32, 5, 11], -4)         # [19, nil, 2]
+p pretentious_primes([32, 5, 11], -5)         # [17, nil, nil]

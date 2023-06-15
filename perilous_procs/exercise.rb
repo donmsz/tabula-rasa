@@ -1,98 +1,113 @@
 require "byebug"
 def some?(array, &prc)
-    array.each do |ele|
-        return true if prc.call(ele)
+    array.each do |element|
+        return true if prc.call(element)
     end
     false
 end
 
-def exactly?(array, n, &prc)
-    count = 0
+def exactly?(array, number, &prc)
+    counter = 0
     array.each do |ele|
-        count +=1 if prc.call(ele)
+        counter += 1 if prc.call(ele)
     end
-    count == n
+    counter == number
 end
 
 def filter_out(array, &prc)
-    arr = []
+    result = []
     array.each do |ele|
-        arr << ele if !prc.call(ele)
+        result << ele if !prc.call(ele)
     end
-    arr
+    result
 end
 
-def at_least?(array, n, &prc)
-    count = 0
+def at_least?(array, number, &prc)
+    counter = 0
     array.each do |ele|
-        count += 1 if prc.call(ele)
+        counter += 1 if prc.call(ele)
     end
-    count >= n
+    counter >= number
 end
 
-def every?(array, &prc)
+def every?(array, &prc) 
     array.each do |ele|
         return false if !prc.call(ele)
     end
     true
 end
 
-def at_most?(array, n, &prc)
-    count = 0
+def at_most?(array, number, &prc)
+    counter = 0
     array.each do |ele|
-        count += 1 if prc.call(ele)
+        counter += 1 if prc.call(ele)
     end
-    count <= n
+    counter <= number
 end
 
-
 def first_index(array, &prc)
-    array.each_with_index do |ele,idx|
-        return idx if prc.call(ele)
+    
+    array.each_with_index do |element, index|
+        return index if prc.call(element)
     end
     nil
 end
 
 def xnor_select(array, block, prc)
-    arr = []
+
+    result = []
     array.each do |ele|
-        arr << ele if prc.call(ele) && block.call(ele) || !prc.call(ele) && !block.call(ele)
+        if !prc.call(ele) && !block.call(ele) || prc.call(ele) && block.call(ele)
+            result << ele
+        end
+
     end
-    arr
+
+    result 
 end
 
 def filter_out!(array, &prc)
-    array.delete_if {|ele| prc.call(ele)}
+    i = 0
+    while i < array.length
+        if prc.call(array[i])
+            array.delete_at(i)
+            i -= 1
+        end
+        i += 1
+    end
+    array
 end
 
-def multi_map(array, n = 1, &prc)
-    arr = []
+def multi_map(array, n = 1 ,&prc)
+    result = []
         array.each do |ele|
-            n.times do 
+            n.times do
                 ele = prc.call(ele)
             end
-            arr << ele
+            result << ele
         end
-    arr
+    result
 end
 
 def proctition(array, &prc)
-    t = []
-    f = []
+    first = []
+    last = []
     array.each do |ele|
         if prc.call(ele)
-            t << ele
+            first << ele
         else
-            f << ele
+            last << ele
         end
     end
-    t + f
+    first + last
 end
 
-def selected_map!(array, block, prc)
+
+
+def selected_map!(array, prc, block)
     array.map! do |ele|
-        if block.call(ele)
-            ele = prc.call(ele)
+        if prc.call(ele)
+            ele = block.call(ele)
         else
             ele
         end
@@ -100,74 +115,87 @@ def selected_map!(array, block, prc)
     nil
 end
 
-def chain_map(ele, procs)
+def chain_map(val, procs)
+
     procs.each do |prc|
-        ele = prc.call(ele)
+        val = prc.call(val)
     end
-    ele
+    val
+
 end
 
-def proc_suffix(sent, hash)
-    s = []
-    sent.split(" ").each do |word|
-        r = word
-        hash.each_pair do |key, value|
+
+def proc_suffix(sent, hasz)
+    result = []
+
+    sent.split(" ").map do |word|
+        holder = word
+        hasz.each do |key,value|
             if key.call(word)
-                r += value
+                holder += value
             end
         end
-        s << r
+        result << holder
+
     end
 
-    s.join(" ")
-end
-
-def proctition_platinum(array,*procs)
-    hash = Hash.new { |hash,key| hash[key] = []}
-    array.each do |ele|
-        procs.each_with_index do |prc,idx|
-            if prc.call(ele)
-                hash[idx+1] << ele
-                break
-            end
-        end
-    end
-    hash.sort
+    result.join(" ")
 end
 
 
-def procipher(sent,hasz)
-    sentence = []
-    sent.split(" ").each do |word|
-        #byebug
-        placeholder = word
-        hasz.each_key do |key|
+def proctition_platinum(array, *procs)
+
+    ha = Hash.new { |hash,key| hash[key] = []}
+
+
+    i = 0
+
+    procs.each_with_index do |prc,index|
+        while i < array.length
+            if prc.call(array[i])
+                ha[index + 1] << array[i]
+                array.delete(array[i])
+                i = 0
+            else
+                i += 1
+            end
+        end
+        i = 0
+    end
+    ha
+end
+
+def procipher(sentence, hash)
+    result = []
+    sentence.split(" ").each do |word|
+        holder = word
+        hash.each do |key,value|
             if key.call(word)
-                placeholder = hasz[key].call(placeholder)
+                holder = value.call(holder)
             end
         end
-        sentence << placeholder
+        result << holder
     end
-    sentence.join(" ")
-end
-
-def picky_procipher(sent,hasz)
-    sentence = []
-    sent.split(" ").each do |word|
-        #byebug
-        placeholder = word
-        hasz.each_key do |key|
-            if key.call(word)
-                placeholder = hasz[key].call(placeholder)
-                break
-            end
-        end
-        sentence << placeholder
-    end
-    sentence.join(" ")
+    result.join(" ")
 end
 
 
+def picky_procipher(sentence, hash)
+    result = []
+
+        sentence.split(" ").each do |word|
+            holder = word
+            hash.each do |key,value|
+                if key.call(word)
+                    holder = value.call(holder)
+                    break
+                end
+            end
+            result << holder
+        end
+
+    result.join(" ")
+end
 
 is_yelled = Proc.new { |s| s[-1] == '!' }
 is_upcase = Proc.new { |s| s.upcase == s }

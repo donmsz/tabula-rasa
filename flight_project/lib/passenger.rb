@@ -1,14 +1,18 @@
 class Passenger
 
-    attr_reader :name
+    attr_accessor name
 
     def initialize(name)
         @name = name
         @flight_numbers = []
     end
+    
+    def name
+        @name
+    end
 
     def has_flight?(flight_number)
-        @flight_numbers.any? {|i| i.upcase == flight_number.upcase}
+        return @flight_numbers.include?(flight_number.upcase)
     end
 
     def add_flight(flight_number)

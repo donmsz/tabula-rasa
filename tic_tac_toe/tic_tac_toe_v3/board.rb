@@ -33,7 +33,7 @@ class Board
     def print
         @grid.each do |row|
             p row
-            p "_____________"
+            p "__________________________________________"
         end
     end
 

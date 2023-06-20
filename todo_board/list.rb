@@ -45,10 +45,10 @@ class List
         p "************************************"
         p "            Groceries               "
         p "************************************"
-        p "Index | Item           | Deadline"
+        p "Index | Item           | Deadline|  Done"
         p "************************************"
         @items.each_with_index do |element, index|
-            p "#{index} |    #{element.title}         | #{element.deadline}"
+            p "#{index} |    #{element.title}      | #{element.deadline}|  #{element.done}"
         end
         p "************************************"
     end
@@ -57,7 +57,7 @@ class List
         return false if !valid_index?(index)
         p "************************************"
         p "#{@items[index].title}         | #{@items[index].deadline}"
-        p "#{@items[index].description}"
+        p "#{@items[index].description}   | #{@items[index].done}    "
         p "************************************"
     end
 
@@ -65,7 +65,7 @@ class List
         return false if !valid_index?(0)
         p "************************************"
         p "#{@items[0].title}         | #{@items[0].deadline}"
-        p "#{@items[0].description}"
+        p "#{@items[0].description}   | #{@items[0].done}    "
         p "************************************"
     end
 
@@ -105,7 +105,19 @@ class List
         @items.sort_by!{ |item| item.deadline}
     end
 
+    def toggle_item(index)
+        @items[index].toggle
+    end
 
+    def remove_item(index)
+        return false if !valid_index?(index)
+        @items.delete_at(index)
+        true
+    end
+
+    def purge
+        @items.delete_if {|item| item.done == "[✓]"}
+    end
 
 
 end

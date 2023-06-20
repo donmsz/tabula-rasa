@@ -11,7 +11,7 @@ class Item
         true
     end
 
-    attr_reader :title, :deadline, :description
+    attr_reader :title, :deadline, :description, :done
     attr_writer :title, :description
 
     def initialize(title, deadline, description)
@@ -19,12 +19,16 @@ class Item
         @title = title
         @deadline = deadline
         @description = description
-        @done = false
+        @done = "[ ]"
 
     end
 
     def deadline=(new_deadline)
         raise "raises error due to invalid date" if !Item.valid_date?(new_deadline)
         @deadline = new_deadline
+    end
+
+    def toggle
+        @done = (@done == "[ ]") ? "[✓]" : "[ ]"
     end
 end

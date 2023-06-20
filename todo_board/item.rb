@@ -19,6 +19,7 @@ class Item
         @title = title
         @deadline = deadline
         @description = description
+        @done = false
 
     end
 

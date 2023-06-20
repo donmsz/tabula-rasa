@@ -73,10 +73,8 @@ class List
         return false if !valid_index?(index)
         return false if index - amount < 0
         amount.times do |i|
-            #debugger
             if index - amount >= 0
                 placeholder = @items[index - i - 1]
-
                 @items[index - i - 1] = @items[index - i]
                 @items[index - i] = placeholder
             else
@@ -95,8 +93,6 @@ class List
                 placeholder = @items[index + i]
                 @items[index + i] = @items[index + i + 1]
                 @items[index + i + 1] = placeholder
-                #debugger
-                #@items[index + i], @items[index + 1 + i] = @items[index + 1 + i] , @items[index + 1]
             else
                 break
             end

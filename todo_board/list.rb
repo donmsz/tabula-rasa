@@ -43,7 +43,7 @@ class List
 
     def print
         p "************************************"
-        p "            Groceries               "
+        p "            #{label.upcase}               "
         p "************************************"
         p "Index | Item           | Deadline|  Done"
         p "************************************"

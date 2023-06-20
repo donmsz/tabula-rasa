@@ -1,6 +1,4 @@
 class Item
-
-
     def self.valid_date?(date_string)
         date = date_string.split("-")
         return false if date[0].length != 4
@@ -13,6 +11,8 @@ class Item
         true
     end
 
+    attr_reader :title, :deadline, :description
+    attr_writer :title, :description
 
     def initialize(title, deadline, description)
         raise "raises error due to invalid date" if !Item.valid_date?(deadline)
@@ -20,25 +20,10 @@ class Item
         @deadline = deadline
         @description = description
 
-
-
-
     end
 
-
-
-
+    def deadline=(new_deadline)
+        raise "raises error due to invalid date" if !Item.valid_date?(new_deadline)
+        @deadline = new_deadline
+    end
 end
-
-
-p Item.new('Fix login page', '2019-10-25', 'The page loads too slow.')
-p Item.new(
-    'Buy Cheese',
-    '2019-10-21',
-    'We require American, Swiss, Feta, and Mozzarella cheese for the Happy hour!'
-)
-p Item.new(
-    'Fix checkout page',
-    '10-25-2019',
-    'The font is too small.'
-)

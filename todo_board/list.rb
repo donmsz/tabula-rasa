@@ -100,15 +100,14 @@ class List
         true
     end
 
+    def sort_by_date!
+        #debugger
+        @items.sort_by!{ |item| item.deadline}
+    end
+
+
+
 
 end
 
 
-
-
-#   l = List.new('Groceries')
-#   l.add_item('cheese', '2019-10-25')
-#   l.add_item('toothpaste', '2019-10-25')        
-#   l.add_item('shampoo', '2019-10-24')
-#   l.add_item('candy', '2019-10-31')
-#

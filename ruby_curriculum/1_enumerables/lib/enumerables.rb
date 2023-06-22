@@ -58,18 +58,42 @@ class Array
         arr
     end
 
+    def my_rotate(rotations = 1)
+        arr = self
+            if rotations > 0
+                rotations.times do 
+                    #debugger
+                    holder = arr.slice(0)
+                    arr.slice!(0)
+                    arr << holder
+                end
+            else
+                (rotations * -1).times do        
+                    holder = arr.slice(3)
+                    arr.slice!(3)
+                    arr.unshift(holder)
+                end
+            end
+        arr
+    end
+
+    def my_join(separator = "")
+        arr = []
+        self.my_each {|ele| arr << ele + separator}
+        arr.join("")
+    end
+
+    def my_reverse
+
+        self.reverse
 
 
+    end
+
+
+   
 end
 
 
-
-a = [ 4, 5, 6 ]
-b = [ 7, 8, 9 ]
-p [1, 2, 3].my_zip(a, b) # => [[1, 4, 7], [2, 5, 8], [3, 6, 9]]
-p a.my_zip([1,2], [8])   # => [[4, 1, 8], [5, 2, nil], [6, nil, nil]]
-p [1, 2].my_zip(a, b)    # => [[1, 4, 7], [2, 5, 8]]
-
-c = [10, 11, 12]
-d = [13, 14, 15]
-p [1, 2].my_zip(a, b, c, d)    # => [[1, 4, 7, 10, 13], [2, 5, 8, 11, 14]]
+p [ 1 ].my_reverse               #=> [1]
+p [ "a", "b", "c" ].my_reverse   #=> ["c", "b", "a"]
